@@ -1,0 +1,46 @@
+version: '3.8'
+# network ismini belirler. Belirtilmezse bulunduğu klasör ismini alır.
+# : sonrasıda tipini belirtir.
+# birden fazla network kullanılabilir.
+networks:
+    5g_core_network:
+      driver: bridge
+      ipam:
+        config:
+          - subnet: 1.1.1.0/24
+            gateway: 1.1.1.1
+
+services:
+  ans:
+    build:
+      context: ./ansible
+    image: ansible:latest
+    container_name: ans
+    privileged: true
+    command: tail -f /dev/null
+    # Ansible ayarlarını (ansible.cfg) ve 
+    # hedef bilgisayar bilgilerini (hosts) tutan dosyaları 
+    # korumak adına volumes altında bağlayalım: 
+    volumes: 
+      - ./ansible_ayarlari/ansible.cfg:/etc/ansible/ansible.cfg
+      - ./ansible_ayarlari/hosts:/etc/ansible/hosts
+      - ./calisma_dizini/proje:~/proje
+    networks:
+        5g_core_network:
+          ipv4_address: 1.1.1.2
+
+  sunucu1:
+    image: rastasheep/ubuntu-sshd
+    container_name: sunucu1
+    networks:
+        5g_core_network:
+          ipv4_address: 1.1.1.3
+
+  # sunucu2:
+  #   image: ubuntu:xenial
+  #   container_name: sunucu2
+  #   privileged: true
+  #   command: '/sbin/init'
+  #   networks:
+  #       5g_core_network:
+  #         ipv4_address: 1.1.1.4
