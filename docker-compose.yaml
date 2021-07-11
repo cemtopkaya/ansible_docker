@@ -13,7 +13,7 @@ networks:
 services:
   ans:
     build:
-      context: ./ansible
+      context: ./calisma_dizini
     image: ansible:latest
     container_name: ans
     privileged: true
@@ -22,9 +22,9 @@ services:
     # hedef bilgisayar bilgilerini (hosts) tutan dosyaları 
     # korumak adına volumes altında bağlayalım: 
     volumes: 
-      - ./ansible_ayarlari/ansible.cfg:/etc/ansible/ansible.cfg
-      - ./ansible_ayarlari/hosts:/etc/ansible/hosts
-      - ./calisma_dizini/proje:~/proje
+      - ./calisma_dizini/ansible_ayarlari/ansible.cfg:/etc/ansible/ansible.cfg
+      - ./calisma_dizini/ansible_ayarlari/hosts:/etc/ansible/hosts
+      - ./calisma_dizini/proje/:/root/proje/
     networks:
         5g_core_network:
           ipv4_address: 1.1.1.2
