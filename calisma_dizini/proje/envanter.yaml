@@ -1,28 +1,37 @@
 all:
   hosts:
-    takma_adi:
-      ansible_host: 1.1.1.3
-      ansible_port: 22
-      # SSH baglantısı kurmak için 
-      # kullanılacak kullanıcı adı
-      ansible_user: root
-      ansible_become: True
-      # sudo veya su
-      ansible_become_method: sudo
-      # hangi kullanıcı olarak komut çalıştıracağı
-      ansible_become_user: root
+    1.1.1.4:
+  children:
+    grup_A:
+      hosts:
+        takma_ad:
+          ansible_host: 1.1.1.3
+          ansible_port: 22
+          ansible_user: root
+          ansible_become: True
+          ansible_become_method: sudo
+          ansible_become_user: root
+        1.1.1.4:
+          ansible_user: root
 
+    grup_b:
+      vars:
+        paketler:
+          # - nmap
+          - netcat
+          # - tcpdump
+      hosts:
+        1.1.1.4:
 
-
-
-
-
-
-
-
-
-
-
+    mc:
+      vars:
+        paketler:
+          - nmap
+      hosts:
+        1.1.1.5:
+        1.1.1.6:
+        1.1.1.7:
+        1.1.1.8:
 
 
 

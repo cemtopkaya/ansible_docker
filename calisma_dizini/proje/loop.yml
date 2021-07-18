@@ -1,0 +1,178 @@
+---
+- name: Dongu islemleri
+  hosts: 
+    - 1.1.1.4
+  become: true
+ 
+  tasks:
+  - name: Dongu ciktisini degiskene kayit eder
+    shell: "echo {{ item }}"
+    loop:
+      - "yazdiracagi ilk metin"
+      # - "yazdiracagi ikinci metin"
+    register: echo_ciktisi
+    tags:
+      - loop
+
+  - debug: "msg={{ echo_ciktisi }}"
+    tags:
+      - loop
+# TASK [debug] ************************************************
+# ok: [1.1.1.4] => {
+#     "msg": {
+#         "changed": true,
+#         "msg": "All items completed",
+#         "results": [
+#             {
+#                 "ansible_loop_var": "item",
+#                 "changed": true,
+#                 "cmd": "echo yazdiracagi ilk metin",
+#                 "delta": "0:00:00.002976",
+#                 "end": "2021-07-18 14:02:45.468948",
+#                 "failed": false,
+#                 "invocation": {
+#                     "module_args": {
+#                         "_raw_params": "echo yazdiracagi ilk metin",
+#                         "_uses_shell": true,
+#                         "argv": null,
+#                         "chdir": null,
+#                         "creates": null,
+#                         "executable": null,
+#                         "removes": null,
+#                         "stdin": null,
+#                         "stdin_add_newline": true,
+#                         "strip_empty_ends": true,
+#                         "warn": false
+#                     }
+#                 },
+#                 "item": "yazdiracagi ilk metin",
+#                 "rc": 0,
+#                 "start": "2021-07-18 14:02:45.465972",
+#                 "stderr": "",
+#                 "stderr_lines": [],
+#                 "stdout": "yazdiracagi ilk metin",
+#                 "stdout_lines": [
+#                     "yazdiracagi ilk metin"
+#                 ]
+#             }
+#         ],
+#         "skipped": false
+#     }
+# }
+# **************************************************************************************************************************
+
+# with_items dizi tipindeki ikinci elemanı düzleştirir
+# 3 eleman girer 5 eleman çıkar
+  - name: with_items dizi olan elemanı düzleştirir (flatten)
+    debug: var=item
+    with_items:
+      - 1
+      - [2,3]
+      - 4
+    tags:
+      - with
+      - with_items
+# TASK [with_items dizi olan eleman? d?zle?tirir (flatten)] ************
+# ok: [1.1.1.4] => (item=1) => {
+#     "ansible_loop_var": "item",
+#     "item": 1
+# }
+# ok: [1.1.1.4] => (item=2) => {
+#     "ansible_loop_var": "item",
+#     "item": 2
+# }
+# ok: [1.1.1.4] => (item=3) => {
+#     "ansible_loop_var": "item",
+#     "item": 3
+# }
+# ok: [1.1.1.4] => (item=4) => {
+#     "ansible_loop_var": "item",
+#     "item": 4
+# }
+# **************************************************************************************************************************
+
+# with_items'den farklı olarak elemanları dönüştürmez
+# bu döngüden girdideki gibi 3 öğe çıkacak, ikincisi bir liste
+  - name: with_list oldugu gibi cikarir, duzlestirme olmaz
+    debug: var=item
+    with_list:
+      - 1
+      - [2,3]
+      - 4
+    tags:
+      - with
+      - with_list
+      
+# TASK [with_list oldugu gibi cikarir, duzlestirme olmaz] ******
+# ok: [1.1.1.4] => (item=1) => {
+#     "ansible_loop_var": "item",
+#     "item": 1
+# }
+# ok: [1.1.1.4] => (item=[2, 3]) => {
+#     "ansible_loop_var": "item",
+#     "item": [
+#         2,
+#         3
+#     ]
+# }
+# ok: [1.1.1.4] => (item=4) => {
+#     "ansible_loop_var": "item",
+#     "item": 4
+# }
+
+# **************************************************************************************************************************
+
+  - name: Çarpraz olacak şekilde dizi döner
+    debug: var=item
+    with_nested:
+      - [ 'SARI', 'SIYAH' ]
+      - [ 'kirmizi', 'mavi', 'beyaz' ]
+    tags:
+      - with
+      - with_nested
+
+# TASK [Çarpraz olacak şekilde dizi döner] ***********
+# ok: [1.1.1.4] => (item=['SARI', 'kirmizi']) => {
+#     "ansible_loop_var": "item",
+#     "item": [
+#         "SARI",
+#         "kirmizi"
+#     ]
+# }
+# ok: [1.1.1.4] => (item=['SARI', 'mavi']) => {
+#     "ansible_loop_var": "item",
+#     "item": [
+#         "SARI",
+#         "mavi"
+#     ]
+# }
+# ok: [1.1.1.4] => (item=['SARI', 'beyaz']) => {
+#     "ansible_loop_var": "item",
+#     "item": [
+#         "SARI",
+#         "beyaz"
+#     ]
+# }
+# ok: [1.1.1.4] => (item=['SIYAH', 'kirmizi']) => {
+#     "ansible_loop_var": "item",
+#     "item": [
+#         "SIYAH",
+#         "kirmizi"
+#     ]
+# }
+# ok: [1.1.1.4] => (item=['SIYAH', 'mavi']) => {
+#     "ansible_loop_var": "item",
+#     "item": [
+#         "SIYAH",
+#         "mavi"
+#     ]
+# }
+# ok: [1.1.1.4] => (item=['SIYAH', 'beyaz']) => {
+#     "ansible_loop_var": "item",
+#     "item": [
+#         "SIYAH",
+#         "beyaz"
+#     ]
+# }
+# ******************************************************************************************************************************************
+

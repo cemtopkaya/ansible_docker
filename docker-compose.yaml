@@ -12,6 +12,7 @@ networks:
 
 services:
   ans:
+    working_dir: /root/proje
     build:
       context: ./calisma_dizini
     image: ansible:latest
@@ -29,12 +30,47 @@ services:
         5g_core_network:
           ipv4_address: 1.1.1.2
 
-  sunucu1:
+  ssh_3:
     image: rastasheep/ubuntu-sshd
-    container_name: sunucu1
+    container_name: ssh_3
     networks:
         5g_core_network:
           ipv4_address: 1.1.1.3
+
+  ssh_4:
+    image: rastasheep/ubuntu-sshd
+    container_name: ssh_4
+    networks:
+        5g_core_network:
+          ipv4_address: 1.1.1.4
+
+  mc_gms:
+    image: rastasheep/ubuntu-sshd
+    container_name: gms
+    networks:
+        5g_core_network:
+          ipv4_address: 1.1.1.5
+  mc_csc:
+    image: rastasheep/ubuntu-sshd
+    container_name: csc
+    networks:
+        5g_core_network:
+          ipv4_address: 1.1.1.6
+
+  mc_ptt:
+    image: rastasheep/ubuntu-sshd
+    container_name: ptt
+    networks:
+        5g_core_network:
+          ipv4_address: 1.1.1.7
+
+  mc_video:
+    image: rastasheep/ubuntu-sshd
+    container_name: mcvideo
+    networks:
+        5g_core_network:
+          ipv4_address: 1.1.1.8
+
 
   # sunucu2:
   #   image: ubuntu:xenial
