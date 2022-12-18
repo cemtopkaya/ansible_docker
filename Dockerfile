@@ -1,6 +1,8 @@
 FROM ubuntu:18.04
  
 ENV DEBIAN_FRONTEND=noninteractive
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
 
 RUN apt-get update && \
   apt-get install -y gcc python-dev libkrb5-dev && \
@@ -15,7 +17,8 @@ RUN apt-get update && \
 RUN apt install -y openssh-client sshpass
 
 # Ansible son sürümünü kuralım
-RUN  pip3 install ansible
+RUN pip3 install "pywinrm>=0.2.2"
+RUN pip3 install ansible
 
 RUN useradd --create-home --shell /bin/bash -g root -u 1001 -p "$(openssl passwd -1 ubuntu)" ansadmin 
-RUN nano /etc/sudoers
+# RUN nano /etc/sudoers

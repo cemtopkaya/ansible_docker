@@ -14,8 +14,10 @@ services:
   ans:
     working_dir: /root/proje
     build:
+      dockerfile: Dockerfile
       context: ./calisma_dizini
-    image: ansible:latest
+    image: cemt/ansible
+    # image: ansible:latest
     container_name: ans
     privileged: true
     command: tail -f /dev/null
