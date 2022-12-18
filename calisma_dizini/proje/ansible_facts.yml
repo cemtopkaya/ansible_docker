@@ -1,0 +1,10 @@
+---
+- name: ansible_facts Bilgilerini gösterir
+  hosts: 
+    - 1.1.1.4
+  become: true
+ 
+  tasks:
+    - name: Sistemdeki mevcutları göster
+      ansible.builtin.debug:
+        var: ansible_facts

@@ -1,0 +1,92 @@
+---
+- name: yeni kullanici yarat
+  hosts: 
+    # - grup_A
+    # - grup_b
+    - 1.1.1.4
+  become: true
+  vars:
+    grup:
+      krallar:
+        adi: krallar
+      hamallar:
+        adi: hamallar
+    kullanici:
+      - {adi: "cem", aciklamasi: "bu kullanıcı kraldır"}
+      - {adi: "cenk", aciklamasi: "bu kullanıcı da kraldır"}
+
+  
+# Oluşturma faslı
+  tasks:
+    - name: Global degiskeni yerel degiskene ata
+      ansible.builtin.debug:
+        msg: "{{ item.key }} <-> {{ item.value }}"
+      loop: "{{ yeni_degisken | dict2items }}"
+      vars:
+        yeni_degisken: "{{ grup.krallar }}"
+
+    - name: Degerleri yazdr
+      ansible.builtin.debug:
+        msg: "{{ item.key }} - {{ item.value }}"
+      loop: "{{ grup.krallar | dict2items }}"
+        
+    - name: Grup yarat
+      group:
+        name: "{{ item.value['adi'] }}"
+        state: present
+      loop: "{{ grup | dict2items }}"
+        
+    - name: Kullanici yarat
+      user:
+        name: "{{ item['adi'] }}"
+        group: "{{ grup.krallar['adi']}}"
+        comment: "{{ item.aciklamasi }}"
+        state: present
+      loop: "{{ kullanici }}"
+
+    - debug: msg="{{lookup('file', '/etc/passwd') }}"
+
+    - name: cat ile oku
+      command: cat passwd chdir=/etc
+      register: icerik
+
+    - name: Display resolv.conf contents
+      command: cat resolv.conf chdir=/etc
+      register: command_output
+      tags:
+        - cat
+
+    - debug: msg="{{command_output.stdout}}"
+      tags:
+        - cat
+
+    - name: display multiple file contents
+      debug: var=item
+      with_file:
+        - "/etc/resolv.conf"
+        - "/etc/passwd"
+      tags:
+         - son1
+    - debug: 
+        var: item
+      with_file:
+        - "/etc/resolv.conf"
+        - "/etc/passwd"
+      tags:
+         - son
+
+
+    # - name: Register loop output as a variable
+    #   ansible.builtin.shell: "cat /etc/passwd | echo"
+    #   register: echo
+
+# Silme faslı
+    - name: Kullanici sil
+      user:
+        name: "cem"
+        state: absent
+
+    - name: Grup sil
+      group:
+        name: "{{ grup.krallar.adi }}"
+        state: absent

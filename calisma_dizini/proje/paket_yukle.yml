@@ -1,0 +1,20 @@
+---
+- name: paket yukle ve kaldır
+  hosts: 
+    - grup_A
+    # - grup_b
+  become: true
+  vars:
+    packetler:
+      - iputils-ping
+
+  tasks:
+    - name: paket yukle
+      package:
+        name: yeni_grup
+        state: present
+        
+    - name: Kullanici yarat
+      user:
+        name: yeni_kullanici
+        state: present

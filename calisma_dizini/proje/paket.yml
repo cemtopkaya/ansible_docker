@@ -1,0 +1,16 @@
+---
+- name: yeni kullanici yarat
+  hosts: 
+    - 1.1.1.4
+  become: true
+  
+# Oluşturma faslı
+  tasks:
+
+    - name: paket yukle
+      package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ paketler }}"
+      tags:
+         - yukle

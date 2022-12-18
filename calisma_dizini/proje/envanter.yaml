@@ -1,0 +1,77 @@
+all:
+  hosts:
+    1.1.1.4:
+  children:
+    grup_A:
+      hosts:
+        takma_ad:
+          ansible_host: 1.1.1.3
+          ansible_port: 22
+          ansible_user: root
+          ansible_become: True
+          ansible_become_method: sudo
+          ansible_become_user: root
+        1.1.1.4:
+          ansible_user: root
+
+    grup_b:
+      vars:
+        paketler:
+          # - nmap
+          - netcat
+          # - tcpdump
+      hosts:
+        1.1.1.4:
+
+    mc:
+      vars:
+        paketler:
+          - nmap
+      hosts:
+        1.1.1.5:
+        1.1.1.6:
+        1.1.1.7:
+        1.1.1.8:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# all:
+#   hosts:
+#     11.12.13.2:
+#   children:
+#     # Bir grup, all grubu altında tanımlanabilir
+#     # veya başka bir grubun altına children ile bağlanabilir
+#     G_NEF:
+#       hosts:
+#         11.12.13.41:
+#     G_NSSF:
+#       hosts:
+#         11.12.13.51:
+#     G_STO:
+#       children:
+#         # Yuvalanmış grupları tanımlamak için children kullan
+#         G_NEF:
+#         G_NSSF:
+#         G_NRF:
+#           hosts:
+#             11.12.13.31:
+#             11.12.13.32:
+#             11.12.13.33:
+
+              

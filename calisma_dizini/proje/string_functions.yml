@@ -1,0 +1,34 @@
+---
+- name: Metin islemleri
+  hosts: 
+    - 1.1.1.4
+  become: true
+  vars:
+    metin: "bu \n bir '\n' metin olsun\ndegil \t mi?"
+ 
+  tasks:
+# split İşlevi
+    - name: split ile bosluklardan bol
+      debug:
+        msg: "{{ metin.split() }}"
+
+    - name: split ile \n karakterinden bol
+      debug:
+        msg: "{{ metin.split('\n') }}"
+
+    - name: split ile \t karakterinden bol
+      debug:
+        msg: "{{ metin.split('\t') }}"
+
+# find İşlevi
+    - name: find ile icinde ara ve bul
+      debug:
+        msg: "{{ metin.find('bu') }}"
+      tags:
+        - find
+
+    - name: find ile icinde ara ama bulama
+      debug:
+        msg: "{{ metin.find('şu') }}"
+      tags:
+        - find
