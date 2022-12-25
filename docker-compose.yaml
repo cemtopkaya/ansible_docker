@@ -14,8 +14,9 @@ services:
   ans:
     working_dir: /root/proje
     build:
-      dockerfile: Dockerfile
-      context: ./calisma_dizini
+      dockerfile: Dockerfile-ansible
+      context: .
+    working_dir: /root/proje
     image: cemt/ansible
     # image: ansible:latest
     container_name: ans
@@ -33,7 +34,10 @@ services:
           ipv4_address: 1.1.1.2
 
   ssh_3:
-    image: rastasheep/ubuntu-sshd
+    build:
+      dockerfile: Dockerfile-ubuntu-sshd
+      context: .
+    image: cemt/bionic-sshd
     container_name: ssh_3
     networks:
         5g_core_network:

@@ -1,0 +1,14 @@
+---
+- name: lines Modulu
+  hosts: 
+    - 1.1.1.4
+  become: true
+  
+  tasks:
+    - name: Dosyadan oku, satır satır yazdır
+      debug: 
+        msg: "`cat ...` ciktisindan satir: {{ item }}"
+      with_lines: cat /etc/resolv.conf
+  
+    - name: kabuk
+      shell: ls /

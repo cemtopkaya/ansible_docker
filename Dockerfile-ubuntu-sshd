@@ -1,0 +1,22 @@
+FROM ubuntu:18.04
+ 
+ENV DEBIAN_FRONTEND=noninteractive
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+# Hedef bilgisayarlara SSH bağlantısı kurabilmemiz için openssl-client kuralım:
+RUN apt-get update && \
+    apt-get install -y openssh-server sshpass
+
+RUN mkdir -p /var/run/sshd
+
+# Bu konteynere baglanmak icin ansadmin kullanicisini ubuntu sifresini kullanabiliriz
+RUN useradd --create-home --shell /bin/bash -g root -u 1001 -p "$(openssl passwd -1 ubuntu)" ansadmin 
+
+# Linux her baslatildiginda /etc/rc.local dosyasına calismasini istedigimiz betikleri yazariz
+# rc betikleri genelde /etc/rc.d/ veya /etc/init.d dizinlerinin altında bulunur ki zaten rc.d dizini de init.d dizinine bağ durumundadır. Dolayısı 
+# ile dosyanın temel olarak olması gereken yer /etc/rc.d/rc.local'dir. Fakat bazı dağıtımlarda bu ismi /etc/rc.d/boot.local biçiminde de görebilirsiniz. 
+# RUN echo "mkdir -p /var/run/sshd" >> /etc/rc.local
+
+# konteynere baglanti kurulabilmesi icin sshd uygulamasini PID 1 olarak calistiracak
+CMD /usr/sbin/sshd -D
